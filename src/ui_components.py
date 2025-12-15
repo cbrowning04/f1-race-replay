@@ -521,6 +521,25 @@ class RaceProgressBarComponent(BaseComponent):
         self._total_laps = total_laps or 1
         self._events = sorted(events, key=lambda e: e.get("frame", 0))
         
+    def _calculate_bar_dimensions(self, window):
+        self._bar_left = self.left_margin
+        self._bar_width = max(100, window.width - self.left_margin - self.right_margin)
+        
+    def _frame_to_x(self, frame: int) -> float:
+        # here we need to calc x position based on frame index
+        # as a proportion of total frames (cap at bar width)
+        if self._total_frames <= 0:
+            return self._bar_left
+        progress = frame / self._total_frames
+        return self._bar_left + (progress * self._bar_width)
+    
+    def _x_to_frame(self, x: float) -> int:
+        # reverse of _frame_to_x
+        if self._bar_width <= 0:
+            return 0
+        progress = (x - self._bar_left) / self._bar_width
+        return int(progress * self._total_frames)
+        
 # Build track geometry from example lap telemetry
 
 def build_track_from_example_lap(example_lap, track_width=200):
