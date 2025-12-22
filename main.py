@@ -114,7 +114,7 @@ if __name__ == "__main__":
   if "--no-hud" in sys.argv:
     visible_hud = False
 
-    # Session type selection
-    session_type = 'SQ' if "--sprint-qualifying" in sys.argv else ('S' if "--sprint" in sys.argv else ('Q' if "--qualifying" in sys.argv else 'R'))
-    
-    main(year, round_number, playback_speed, session_type=session_type, visible_hud=visible_hud)
+  # Session type selection
+  session_type = 'SQ' if "--sprint-qualifying" in sys.argv else ('S' if "--sprint" in sys.argv else ('Q' if "--qualifying" in sys.argv else 'R'))
+  
+  main(year, round_number, playback_speed, session_type=session_type, visible_hud=visible_hud)

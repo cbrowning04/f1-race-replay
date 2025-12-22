@@ -22,7 +22,7 @@ class BaseComponent:
     def on_mouse_press(self, window, x: float, y: float, button: int, modifiers: int) -> bool: return False
 
 class LegendComponent(BaseComponent):
-    def __init__(self, x: int = 20, y: int = 300, visible=True): # Increased y to 350 to fit all lines
+    def __init__(self, x: int = 20, y: int = 220, visible=True): # Increased y to 220 to fit all lines
         self.x = x
         self.y = y
         self._control_icons_textures = {}
