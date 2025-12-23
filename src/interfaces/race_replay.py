@@ -9,6 +9,7 @@ from src.ui_components import (
     DriverInfoComponent, 
     RaceProgressBarComponent,
     RaceControlsComponent,
+    FlagComponent,
     extract_race_events,
     build_track_from_example_lap
 )
@@ -25,27 +26,7 @@ class F1RaceReplayWindow(arcade.Window):
         # Set resizable to True so the user can adjust mid-sim
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, title, resizable=True)
 
-        # Parse flag filepaths
-        flag_dir = os.path.join("images", "flags")
-        flag_map = {}
-        for path in os.listdir(flag_dir):
-            path = os.path.join(flag_dir, path)
-            race_name = os.path.basename(path).replace(".png", "").replace("_", " ").title()
-            flag_map[race_name] = os.path.abspath(path)
-        aliases = {
-            "Las Vegas": "United States",
-            "Miami": "United States",
-            "Emilia Romagna": "Italian"
-        }
-        for alias in aliases:
-            flag_map[alias] = flag_map[aliases[alias]]
-
-        # Load flag texture if available
-        gp_name = title.split("Grand Prix")[0].strip()
-        if gp_name in flag_map.keys():
-            self.flag_texture = arcade.load_texture(flag_map[gp_name])
-        else:
-            self.flag_texture = None
+        self.flag_comp = FlagComponent(title)
 
         self.frames = frames
         self.track_statuses = track_statuses
@@ -400,14 +381,15 @@ class F1RaceReplayWindow(arcade.Window):
         lap_text.draw()
         
         # conditionally draw flag
-        if self.flag_texture is not None:
+        if self.flag_comp.flag_texture is not None:
             text_right = lap_text.x + lap_text.content_width
-            flag_x = text_right + (self.flag_texture.width*0.8) / 2 + 6
+            flag_x = text_right + (self.flag_comp.flag_texture.width*0.8) / 2 + 6
             flag_y = lap_text.y - lap_text.content_height / 2
-            rect = arcade.XYWH(flag_x, flag_y, self.flag_texture.width*0.8, self.flag_texture.height*0.8)
-            arcade.draw_texture_rect(
-                rect = rect,
-                texture = self.flag_texture
+            self.flag_comp.draw(
+                x=flag_x,
+                y=flag_y,
+                x_size=self.flag_comp.flag_texture.width*0.8,
+                y_size=self.flag_comp.flag_texture.height*0.8
             )
         
         arcade.Text(f"Race Time: {time_str} (x{self.playback_speed})", 
